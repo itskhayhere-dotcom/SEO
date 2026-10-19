@@ -1,0 +1,16 @@
+{% extends "base.html" %}{% from "_macros.html" import metric, badge, post %}{% block body %}
+<h1>{{ c.name }} {{ badge(c.status) }}</h1>
+<div class="muted">{{ c.url }} · {{ c.country }} · sheet tab “{{ c.sheet_tab }}” <span class="badge {{ c.sheet_status }}">{{ c.sheet_status }}</span> {{ c.sheet_error or '' }}</div>
+<div class="metrics card">{{ metric('Domain Authority', card.da, 'self-built, graph of ' ~ nodes ~ ' domains') }}{{ metric('Page Authority (home)', card.pa) }}{{ metric('Spam score', card.spam) }}{{ metric('Traffic proxy', card.traffic) }}
+{{ metric('Today', card.today ~ ' / ' ~ c.daily_cap) }}{{ metric('Verified', card.verified, 'of ' ~ card.total ~ ' submitted') }}{{ metric('Target pool', pool) }}</div>
+<div class="actions">{% for j,l in [('backlinks','Run backlink agent'),('metrics','Refresh DA/PA/Spam'),('audit','Run audit'),('discover','Discover targets'),('verify','Verify now')] %}
+{% if j in running %}<button disabled>{{ l }}… running</button>{% else %}{{ post('/clients/%d/run/%s'|format(c.id,j), l) }}{% endif %}{% endfor %}</div>
+<h2>Metric history</h2><div class="card"><div class="chart" data-src="/api/clients/{{ c.id }}/history"></div></div>
+<h2>Latest backlinks</h2><div class="scroll"><table><tr><th>When</th><th>Target</th><th>Anchor</th><th>Status</th><th>Verification</th></tr>
+{% for b in recent %}<tr><td>{{ (b.submitted_at or b.created_at)[:16] }}</td><td class="small"><a href="{{ b.target_url }}" rel="noreferrer noopener" target="_blank">{{ b.target_url[:60] }}</a></td><td>{{ b.anchor }}</td><td>{{ badge(b.status) }}</td><td>{{ badge(b.verification) }}</td></tr>{% else %}<tr><td colspan="5" class="muted">None yet.</td></tr>{% endfor %}</table></div>
+<p><a href="/backlinks?client_id={{ c.id }}">All backlinks →</a></p>
+<h2>Recent runs</h2>{% include "_runs.html" %}
+<h2>Settings</h2><form method="post" action="/clients/{{ c.id }}/edit" class="card"><input type="hidden" name="csrf_token" value="{{ csrf }}">{% include "_client_form.html" %}<button>Save</button></form>
+<h2>Delete client</h2><form method="post" action="/clients/{{ c.id }}/delete" class="card" onsubmit="return confirm('Delete {{ c.name|e }} and all its data?')"><input type="hidden" name="csrf_token" value="{{ csrf }}">
+<p class="muted">Removes the client, its backlink ledger, audits and schedules from this app. The sheet tab is kept unless you tick the box.</p>
+<label>Type the client name to confirm<input name="confirm"></label><label class="chk"><input type="checkbox" name="delete_tab" value="1"> also delete the Google Sheet tab</label><button class="danger">Delete</button></form>{% endblock %}

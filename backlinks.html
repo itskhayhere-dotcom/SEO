@@ -1,0 +1,11 @@
+{% extends "base.html" %}{% from "_macros.html" import badge %}{% block body %}
+<h1>Backlink activity <span class="muted">({{ total }})</span></h1>
+<form method="get" class="filters"><select name="client_id"><option value="0">All clients</option>{% for c in clients %}<option value="{{ c.id }}" {{ 'selected' if f.client_id==c.id }}>{{ c.name }}</option>{% endfor %}</select>
+<select name="status"><option value="">Any status</option>{% for s in ['submitted','verified','failed','needs_manual','reserved'] %}<option {{ 'selected' if f.status==s }}>{{ s }}</option>{% endfor %}</select>
+<input name="q" value="{{ f.q }}" placeholder="search URL / anchor"><input type="date" name="date_from" value="{{ f.date_from }}"><input type="date" name="date_to" value="{{ f.date_to }}">
+<button>Filter</button><a class="btn" href="/backlinks.csv?{{ qs }}">Export CSV</a></form>
+<div class="scroll"><table><tr><th>Date</th><th>Client</th><th>Target</th><th>Anchor</th><th>Status</th><th>Verification</th><th>Rel</th><th>Spam</th><th>DA</th><th>Notes</th></tr>
+{% for b in rows %}<tr><td>{{ (b.submitted_at or b.created_at)[:16] }}</td><td>{{ b.cname }}</td><td class="small"><a href="{{ b.target_url }}" target="_blank" rel="noreferrer noopener">{{ b.target_url[:55] }}</a></td><td>{{ b.anchor }}</td>
+<td>{{ badge(b.status) }}</td><td>{{ badge(b.verification) }}</td><td>{{ b.rel or '' }}</td><td>{{ b.spam if b.spam is not none else '' }}</td><td>{{ b.da if b.da is not none else '' }}</td><td class="small">{{ b.detail or '' }}</td></tr>
+{% else %}<tr><td colspan="10" class="muted">No backlinks match.</td></tr>{% endfor %}</table></div>
+<p>{% if p>1 %}<a href="?{{ qs }}&p={{ p-1 }}">← newer</a>{% endif %} {% if total > p*100 %}<a href="?{{ qs }}&p={{ p+1 }}">older →</a>{% endif %}</p>{% endblock %}

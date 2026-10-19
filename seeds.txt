@@ -1,0 +1,5 @@
+# Seed "list" pages for target discovery (optional). One http(s) URL per line.
+# Put pages that LIST directories / guest-post opportunities for your region or niche
+# (e.g. a blog post "top business directories in <country>"). The agent follows their outbound links,
+# classifies each candidate (directory / guest post / forum), country-scores it, then ranks it with the built-in DA/PA/Spam.
+# https://example.com/list-of-business-directories-in-your-country

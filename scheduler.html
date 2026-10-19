@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block body %}
+<h1>Scheduler</h1>
+<p class="muted">Cron format: minute hour day-of-month month day-of-week · timezone <b>{{ tzname }}</b> · e.g. <code>0 9 * * *</code> daily 09:00, <code>30 8 * * 1-5</code> weekdays 08:30. Missed runs are caught up after a restart. Sheet sync: <b>{{ sheet.backend }}</b>, {{ sheet.dirty }} row(s) waiting.</p>
+<div class="scroll"><table><tr><th>Client</th><th>Job</th><th>Cron</th><th>On</th><th>Next run</th><th>Last run (UTC)</th><th></th></tr>
+{% for r in rows %}<tr><form method="post" action="/scheduler"><input type="hidden" name="csrf_token" value="{{ csrf }}"><input type="hidden" name="schedule_id" value="{{ r.id }}">
+<td>{{ r.cname }}</td><td>{{ r.job }}{% if r.running %} <span class="badge running">running</span>{% endif %}</td><td><input name="cron" value="{{ r.cron }}" class="cron"></td>
+<td><input type="checkbox" name="enabled" value="1" {{ 'checked' if r.enabled }}></td><td class="small">{{ r.next.strftime('%Y-%m-%d %H:%M') if r.next else '–' }}</td><td class="small">{{ r.last_run or '–' }}</td><td><button>Save</button></td></form></tr>
+{% else %}<tr><td colspan="7" class="muted">Add a client first.</td></tr>{% endfor %}</table></div>
+<h2>Recent runs</h2>{% include "_runs.html" %}{% endblock %}

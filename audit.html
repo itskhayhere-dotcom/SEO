@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% block body %}
+<h1>Audit · {{ a.cname }} <span class="muted">{{ a.started_at }}</span></h1>
+<div class="metrics card"><div class="metric"><div class="v">{{ a.score }}</div><div class="l">Score /100</div></div><div class="metric"><div class="v">{{ a.pages }}</div><div class="l">Pages crawled</div></div>
+{% for s in ['critical','high','medium','low','info'] %}<a class="metric" href="?sev={{ s }}"><div class="v">{{ counts.get(s,0) }}</div><div class="l"><span class="badge {{ s }}">{{ s }}</span></div></a>{% endfor %}</div>
+<p>{% if sev %}Filtered: <b>{{ sev }}</b> · <a href="?">show all</a>{% endif %}</p>
+<div class="scroll"><table><tr><th>Severity</th><th>Issue</th><th>URL</th><th>Detail</th></tr>
+{% for i in issues %}<tr><td><span class="badge {{ i.severity }}">{{ i.severity }}</span></td><td>{{ i.code.replace('_',' ') }}</td><td class="small">{{ i.url or '' }}</td><td class="small">{{ i.detail or '' }}</td></tr>{% else %}<tr><td colspan="4" class="muted">No issues.</td></tr>{% endfor %}</table></div>
+<h2>Pages</h2><div class="scroll"><table><tr><th>URL</th><th>Status</th><th>Depth</th><th>TTFB ms</th><th>HTML KB</th><th>Title</th><th>Lab (load/LCP)</th></tr>
+{% for p in pages %}<tr><td class="small">{{ p.url }}</td><td>{{ p.status }}</td><td>{{ p.depth }}</td><td>{{ p.ttfb_ms }}</td><td>{{ (p.bytes/1024)|round(0)|int }}</td><td class="small">{{ p.title or '' }}</td>
+<td class="small">{% set m = (p.metrics or '{}')|fromjson %}{{ m.get('load','') }}{% if m.get('lcp') %} / {{ m.get('lcp') }}{% endif %}</td></tr>{% endfor %}</table></div>{% endblock %}

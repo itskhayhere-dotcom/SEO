@@ -1,0 +1,16 @@
+fastapi
+uvicorn[standard]
+jinja2
+python-multipart
+itsdangerous
+httpx
+beautifulsoup4
+lxml
+tldextract
+apscheduler>=3.10,<4
+croniter
+playwright
+google-auth
+requests
+python-dotenv
+pytest

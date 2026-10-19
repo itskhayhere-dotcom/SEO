@@ -1,0 +1,5 @@
+{% extends "base.html" %}{% from "_macros.html" import post %}{% block body %}
+<h1>Audits</h1><div class="actions">{% for c in clients %}{{ post('/clients/%d/run/audit'|format(c.id), 'Audit ' ~ c.name) }}{% endfor %}</div>
+<div class="scroll"><table><tr><th>When (UTC)</th><th>Client</th><th>Pages</th><th>Score</th><th>Issues</th></tr>
+{% for a in rows %}<tr><td><a href="/audits/{{ a.id }}">{{ a.started_at }}</a></td><td>{{ a.cname }}</td><td>{{ a.pages }}</td><td>{{ a.score if a.score is not none else 'running…' }}</td>
+<td>{% for s in ['critical','high','medium','low','info'] %}<span class="badge {{ s }}">{{ a.counts.get(s,0) }} {{ s }}</span> {% endfor %}</td></tr>{% else %}<tr><td colspan="5" class="muted">No audits yet.</td></tr>{% endfor %}</table></div>{% endblock %}

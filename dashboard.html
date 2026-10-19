@@ -1,0 +1,10 @@
+{% extends "base.html" %}{% from "_macros.html" import metric, badge, post %}{% block body %}
+<h1>Overview</h1>
+{% if not cards %}<div class="card">No clients yet. <a href="/clients">Add your first client</a>.</div>{% endif %}
+<div class="grid">{% for k in cards %}{% set c=k.c %}
+<div class="card"><h2><a href="/clients/{{ c.id }}">{{ c.name }}</a> {{ badge(c.status) }}</h2>
+<div class="muted">{{ c.domain }} · {{ c.country }}{% if c.sheet_status!='ok' %} · <span class="warn" title="{{ c.sheet_error or '' }}">sheet tab {{ c.sheet_status }}</span>{% endif %}</div>
+<div class="metrics">{{ metric('DA', k.da) }}{{ metric('PA', k.pa) }}{{ metric('Spam', k.spam) }}{{ metric('Today', k.today ~ '/' ~ c.daily_cap) }}{{ metric('Total', k.total) }}{{ metric('Verified', k.verified) }}</div>
+<div class="muted">{% if k.audit %}Audit {{ k.audit.score }}/100 · {{ k.audit_counts.get('critical',0) }} critical · {{ k.audit_counts.get('high',0) }} high{% else %}No audit yet{% endif %}
+{% if k.manual %} · {{ k.manual }} need manual action{% endif %}{% if k.failed %} · {{ k.failed }} failed{% endif %}</div></div>{% endfor %}</div>
+<h2>Recent runs</h2>{% include "_runs.html" %}{% endblock %}

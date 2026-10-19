@@ -1,0 +1,7 @@
+{% extends "base.html" %}{% from "_macros.html" import badge %}{% block body %}
+<h1>Clients</h1>
+<div class="scroll"><table><tr><th>Name</th><th>Website</th><th>Country</th><th>Status</th><th>Sheet tab</th></tr>
+{% for c in rows %}<tr><td><a href="/clients/{{ c.id }}">{{ c.name }}</a></td><td>{{ c.url }}</td><td>{{ c.country }}</td><td>{{ badge(c.status) }}</td>
+<td>{{ c.sheet_tab }} <span class="badge {{ c.sheet_status }}">{{ c.sheet_status }}</span></td></tr>{% else %}<tr><td colspan="5" class="muted">None yet.</td></tr>{% endfor %}</table></div>
+<h2>Add client</h2><form method="post" action="/clients" class="card"><input type="hidden" name="csrf_token" value="{{ csrf }}">
+{% set c=none %}{% include "_client_form.html" %}<button>Create client &amp; sheet tab</button></form>{% endblock %}

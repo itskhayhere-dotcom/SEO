@@ -1,0 +1,12 @@
+<div class="formgrid">
+<label>Name<input name="name" value="{{ c.name if c else '' }}" required></label>
+<label>Website URL<input name="url" value="{{ c.url if c else '' }}" placeholder="https://example.com" required></label>
+<label>Country target<select name="country">{% for code,cc in countries.items() %}<option value="{{ code }}" {{ 'selected' if (c and c.country==code) or (not c and code=='IN') }}>{{ cc.name }} ({{ code }})</option>{% endfor %}</select></label>
+<label>Status<select name="status">{% for s in ['active','paused','archived'] %}<option {{ 'selected' if c and c.status==s }}>{{ s }}</option>{% endfor %}</select></label>
+<label>Niche / category<input name="niche" value="{{ c.niche if c else '' }}" placeholder="e.g. heritage restoration"></label>
+<label>Contact email (used in forms)<input type="email" name="contact_email" value="{{ c.contact_email if c else '' }}"></label>
+<label class="wide">Short description<textarea name="description" rows="2">{{ c.description if c else '' }}</textarea></label>
+<label class="wide">Anchor variants (one per line; rotated, least-used first)<textarea name="anchors" rows="3">{{ anchors if anchors is defined else '' }}</textarea></label>
+<label>Daily cap<input type="number" name="daily_cap" min="1" max="200" value="{{ c.daily_cap if c else 25 }}"></label>
+<label>Max target spam score<input type="number" name="max_spam" min="0" max="100" value="{{ c.max_spam if c else 40 }}"></label>
+<label>Min target DA<input type="number" name="min_da" min="0" max="100" value="{{ c.min_da if c else 0 }}"></label></div>

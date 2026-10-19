@@ -1,0 +1,3 @@
+{% macro post(action, label, cls='') %}<form method="post" action="{{ action }}" class="inline"><input type="hidden" name="csrf_token" value="{{ csrf }}"><button class="{{ cls }}">{{ label }}</button></form>{% endmacro %}
+{% macro badge(s) %}<span class="badge {{ s }}">{{ s }}</span>{% endmacro %}
+{% macro metric(label, v, hint='') %}<div class="metric"><div class="v">{{ '–' if v is none else (v|round(1) if v is number else v) }}</div><div class="l">{{ label }}</div>{% if hint %}<div class="h">{{ hint }}</div>{% endif %}</div>{% endmacro %}

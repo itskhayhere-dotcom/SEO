@@ -1,0 +1,12 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{% block title %}SEO CRM{% endblock %}</title><link rel="stylesheet" href="/static/app.css"></head>
+<body>
+{% if page is defined %}
+<aside id="side"><div class="brand">SEO&nbsp;CRM</div>
+<nav>{% for k,l in [('dashboard','Overview'),('clients','Clients'),('backlinks','Backlinks'),('audits','Audits'),('scheduler','Scheduler')] %}
+<a href="{{ '/' if k=='dashboard' else '/'+k }}" class="{{ 'on' if page==k }}">{{ l }}</a>{% endfor %}</nav>
+<form method="post" action="/logout"><input type="hidden" name="csrf_token" value="{{ csrf }}"><button class="link">Sign out</button></form></aside>
+<button id="burger" onclick="document.body.classList.toggle('nav')">&#9776;</button>
+{% endif %}
+<main>{% if flash %}<div class="flash">{{ flash }}</div>{% endif %}{% block body %}{% endblock %}</main>
+<script src="/static/app.js"></script></body></html>
